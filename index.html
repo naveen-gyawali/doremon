@@ -276,6 +276,14 @@
     }
     .pill:hover::after{ opacity:1; }
 
+    /* ACTIVE pill */
+    .pill.active{
+      border-color: rgba(123,97,255,.40);
+      box-shadow: 0 16px 34px rgba(0,0,0,.14);
+      transform: translateY(-2px);
+    }
+    .pill.active::after{ opacity:1; }
+
     .panel{
       padding: 14px;
       border-radius: 18px;
@@ -443,7 +451,7 @@
       border-radius: 50%;
       background: #c88a62;
       top: 0%;
-      box-shadow: inset -10px -12px 0 rgba(0,0,0,.05);
+      box-shadow: inset -10px -12px 0 rgba(0,0,0,.05));
       transition: transform .25s ease;
     }
     .ear.left{ left: 6%; transform: rotate(-10deg); }
@@ -516,6 +524,7 @@
     }
     .lid.left{ left: 33.5%; }
     .lid.right{ right: 33.5%; animation-delay: .12s; }
+
     @keyframes blink{
       0%, 92%, 100%{ opacity:0; transform: scaleY(.2); }
       94%, 96%{ opacity:1; transform: scaleY(1); }
@@ -767,6 +776,13 @@
       object-fit: contain;
       background: #fff;
       display:block;
+    }
+    .modalBox video{
+      width:100%;
+      max-height: 70vh;
+      object-fit: contain;
+      display:block;
+      background:#000;
     }
     .modalBar{
       display:flex;
@@ -1022,10 +1038,22 @@
   <div class="heartRain" id="heartRain" aria-hidden="true"></div>
   <canvas id="confetti"></canvas>
 
-  <!-- Lightbox modal -->
+  <!-- Lightbox modal (IMAGE + VIDEO) -->
   <div class="modal" id="modal">
-    <div class="modalBox" role="dialog" aria-modal="true" aria-label="Image preview">
-      <img id="modalImg" alt="Preview" />
+    <div class="modalBox" role="dialog" aria-modal="true" aria-label="Preview">
+      <img id="modalImg" alt="Preview" style="display:none;" />
+
+      <video
+        id="modalVideo"
+        muted
+        controls
+        playsinline
+        preload="metadata"
+        style="display:none; width:100%; max-height:70vh; background:#000;"
+      >
+        Your browser does not support the video tag.
+      </video>
+
       <div class="modalBar">
         <div id="modalCap">💙</div>
         <button class="xbtn" id="closeModal">Close ✨</button>
@@ -1107,8 +1135,17 @@
       <div class="badge"><span class="dot"></span> Happy Propose Day 💍</div>
       <h1>Hey <span class="nameGlow">Siru</span> (Doremon) 💙</h1>
       <p class="sub">
-        Today’s question is simple… but my intention is serious.
-        I want a relationship that feels safe, respectful, and genuinely us.
+        I wanted to say something to you,
+        would you like to listen?
+        Life is just a small journey,
+        would you like to walk it with me?
+
+        And when sleep ever escapes me,
+        would you hold me and let me rest in your arms?
+        I have lost every precious thing I ever had,
+        but even then,
+        would you choose to become
+        that precious thing for me?
       </p>
     </div>
 
@@ -1140,16 +1177,32 @@
           <div>
             <h2>One honest question 💙</h2>
             <p class="type" id="typeLine"></p><span class="caret">|</span>
-            <p style="margin-top:6px; color: var(--muted); line-height:1.65;">
-              I’m not promising perfection. I’m promising effort: respect, communication, loyalty, and peace.
-              The “we” kind of love — not the ego kind.
-            </p>
+            <p id="supportPara" style="margin-top:6px; color: var(--muted); line-height:1.65;"></p>
 
-            <div class="pillRow">
-              <div class="pill" data-line="Siru (Doremon), I don’t want ‘almost’. I want ‘always’. 💙">Switch line #1</div>
-              <div class="pill" data-line="I’ll be your calm on heavy days, and your smile on normal ones. 🌙">Switch line #2</div>
-              <div class="pill" data-line="I won’t love you loudly. I’ll love you consistently. 🤍">Switch line #3</div>
-              <div class="pill" data-line="You’re my favorite kind of home — the safe kind. 🫶">Switch line #4</div>
+            <div class="pillRow" id="pillRow">
+              <div class="pill"
+                data-line="Siru (Doremon), I don’t want ‘almost’. I want ‘always’. 💙"
+                data-para="I want the kind of love that stays—through distance, through doubts, through time. Not just words, but a real ‘us’ that lasts.">
+                Switch line #1
+              </div>
+
+              <div class="pill"
+                data-line="I’ll be your calm on heavy days, and your smile on normal ones. 🌙"
+                data-para="Even from far away, I’ll show up emotionally—consistent, respectful, and present. Love should feel safe, not confusing.">
+                Switch line #2
+              </div>
+
+              <div class="pill"
+                data-line="Miles exist between us, but so does trust, commitment, and belief in forever. 🤍"
+                data-para="Distance is the situation, not the definition. What defines us is loyalty, patience, and the kind of love that keeps choosing the same person.">
+                Switch line #3
+              </div>
+
+              <div class="pill"
+                data-line="You’re my favorite kind of home — the safe kind. 🫶"
+                data-para="You make me feel steady. Not rushed, not anxious—just sure. And that’s why I want a forever that is built, not borrowed.">
+                Switch line #4
+              </div>
             </div>
           </div>
         </div>
@@ -1181,13 +1234,13 @@
           <div class="panel">
             <h3>For you, <span class="nameGlow">Siru</span> 💙</h3>
             <div class="quote">
-              <span>“Even on the days you don’t feel enough — I will still choose you.”</span>
-              <small>— not as a favor, but because you’re worth it.</small>
+              <span>“I want a love that doesn’t fade when it gets difficult.”</span>
+              <small>— distance can test us, but it will not define us.</small>
             </div>
             <div style="height:10px"></div>
             <div class="quote">
-              <span>“You don’t have to carry life alone anymore.”</span>
-              <small>— I’ll stand beside you, not above you.</small>
+              <span>“I don’t just want you in my good days.”</span>
+              <small>— I want you in my whole life, step by step.</small>
             </div>
           </div>
         </div>
@@ -1221,18 +1274,18 @@
           <h2>Relationship vibes: calm, real, grown ✨</h2>
 
           <div class="quote">
-            <span>“I don’t want perfect. I want consistent, kind, and real.”</span>
-            <small>— and I’m ready to be that for you, <span class="nameGlow">Siru</span>.</small>
+            <span>“I want to love you in a way that feels safe, not loud.”</span>
+            <small>— steady love, calm love, real love.</small>
           </div>
 
           <div class="quote">
-            <span>“I’ll choose you on the normal days too — not just the romantic ones.”</span>
-            <small>— that’s what makes it last.</small>
+            <span>“Even from miles away, I’ll stay emotionally present.”</span>
+            <small>— consistent words, consistent actions, consistent respect.</small>
           </div>
 
           <div class="quote">
-            <span>“We’ll protect each other’s peace. Us &gt; ego.”</span>
-            <small>— every single time.</small>
+            <span>“If we’re building forever, we build it with trust.”</span>
+            <small>— not control, not ego, not games.</small>
           </div>
 
           <div class="panel">
@@ -1264,25 +1317,37 @@
           </div>
 
           <div class="gallery" id="gallery">
-            <div class="polaroid" data-cap="Doremon energy: calm + cute 💙" data-src="https://img.favpng.com/17/15/21/doraemon-blue-robotic-cat-character-illustration-A84TwYMq.jpg">
+            <div class="polaroid"
+              data-cap="This poem is just for you 💙"
+              data-src="https://img.favpng.com/17/15/21/doraemon-blue-robotic-cat-character-illustration-A84TwYMq.jpg"
+              data-video="video01.mp4">
               <div class="sticker">💙</div>
               <img src="https://img.favpng.com/17/15/21/doraemon-blue-robotic-cat-character-illustration-A84TwYMq.jpg" alt="Doraemon image 1" />
               <div class="cap">Cuteness level: MAX <small>click ✨</small></div>
             </div>
 
-            <div class="polaroid" data-cap="Love mode: ON 💖" data-src="https://cdn.imgbin.com/7/16/9/doraemon-blue-cartoon-character-with-hearts-NPEQMSxF.jpg">
+            <div class="polaroid"
+              data-cap="Every word comes from my heart 🌙"
+              data-src="https://cdn.imgbin.com/7/16/9/doraemon-blue-cartoon-character-with-hearts-NPEQMSxF.jpg"
+              data-video="video02.mp4">
               <div class="sticker left">💘</div>
               <img src="https://cdn.imgbin.com/7/16/9/doraemon-blue-cartoon-character-with-hearts-NPEQMSxF.jpg" alt="Doraemon image 2" />
               <div class="cap">Hearts everywhere <small>click ✨</small></div>
             </div>
 
-            <div class="polaroid" data-cap="Blushing because… you 💙" data-src="https://cdn.imgbin.com/1/5/11/doraemon-blue-cartoon-robot-cat-blushing-mem2qiuA.jpg">
+            <div class="polaroid"
+              data-cap="Distance, but still us 🤍"
+              data-src="https://cdn.imgbin.com/1/5/11/doraemon-blue-cartoon-robot-cat-blushing-mem2qiuA.jpg"
+              data-video="video03.mp4">
               <div class="sticker">🙈</div>
-              <img src="https://cdn.imgbin.com/1/5/11/doraemon-blue-cartoon-robot-cat-blushing-mem2qiuA.jpg" alt="Doraemon image 3" />
+              <img src="https://cdn.imgbin.com/1/5/11/doraemon-blue-cartoon-robot cat-blushing-mem2qiuA.jpg" alt="Doraemon image 3" />
               <div class="cap">Soft blush vibes <small>click ✨</small></div>
             </div>
 
-            <div class="polaroid" data-cap="Cute couple energy 💞" data-src="https://i.pinimg.com/originals/dc/5d/c7/dc5dc7aacd66631cbf280d883dc260a4.png">
+            <div class="polaroid"
+              data-cap="Forever starts here 💍"
+              data-src="https://i.pinimg.com/originals/dc/5d/c7/dc5dc7aacd66631cbf280d883dc260a4.png"
+              data-video="video04.mp4">
               <div class="sticker left">🫶</div>
               <img src="https://i.pinimg.com/originals/dc/5d/c7/dc5dc7aacd66631cbf280d883dc260a4.png" alt="Doraemon image 4" />
               <div class="cap">Us, basically <small>click ✨</small></div>
@@ -1327,8 +1392,8 @@
           <div class="ringRow" aria-hidden="true">💍💙✨💞</div>
 
           <div class="quote" style="text-align:center; font-size: 16px;">
-            <span>“If I’m with you, I’m home.”</span>
-            <small>— and I’ll keep earning that place, <span class="nameGlow">Siru</span>.</small>
+            <span>“I’m choosing you as my future, not just my feeling.”</span>
+            <small>— and I’ll prove it with consistency, <span class="nameGlow">Siru</span>.</small>
           </div>
 
           <div class="promiseGrid">
@@ -1442,8 +1507,10 @@
       toastTimer = setTimeout(()=>toast.classList.remove('show'), 1650);
     }
 
-    // Typewriter
+    // Typewriter + support paragraph
     const typeLine = document.getElementById('typeLine');
+    const supportPara = document.getElementById('supportPara');
+
     function typeText(text){
       typeLine.textContent = "";
       let i = 0;
@@ -1453,15 +1520,30 @@
         if(i > text.length) clearInterval(t);
       }, 22);
     }
-    typeText("Siru (Doremon), will you let me be the person who chooses you—gently, daily, and for real? 💙");
 
-    // Pills
-    document.querySelectorAll('.pill').forEach(p=>{
+    function setLineAndPara(line, para){
+      typeText(line);
+      if (supportPara) supportPara.textContent = para || "";
+    }
+
+    const defaultLine = "Siru (Doremon), will you let me be the person who chooses you—gently, daily, and for real? 💙";
+    const defaultPara = "We’re still early in life, and distance is real—but my intentions are clearer than ever. I want a forever that we build with loyalty, trust, and steady love.";
+    setLineAndPara(defaultLine, defaultPara);
+
+    // Pills (switch line + paragraph + active state)
+    const pills = document.querySelectorAll('.pill');
+    pills.forEach(p=>{
       p.addEventListener('click', ()=>{
-        typeText(p.dataset.line);
+        pills.forEach(x=>x.classList.remove('active'));
+        p.classList.add('active');
+
+        setLineAndPara(p.dataset.line, p.dataset.para);
         showToast("Updated 😄");
       });
     });
+
+    // Optional: auto-select first pill on load
+    pills[0]?.click();
 
     // Cute rotating teddy heart text
     const heartText = document.getElementById('heartText');
@@ -1690,25 +1772,62 @@
       go(2);
     });
 
-    // Gallery modal
+    // ✅ Gallery modal (image OR video)
     const modal = document.getElementById('modal');
     const modalImg = document.getElementById('modalImg');
+    const modalVideo = document.getElementById('modalVideo');
     const modalCap = document.getElementById('modalCap');
     const closeModal = document.getElementById('closeModal');
 
+    function openModal({ cap, imgSrc, videoSrc }){
+      modalCap.textContent = cap || "💙";
+      modal.classList.add('show');
+
+      // Reset both
+      modalImg.style.display = "none";
+      modalVideo.style.display = "none";
+
+      // Stop previous video if any
+      modalVideo.pause();
+      modalVideo.removeAttribute("src");
+      modalVideo.load();
+
+      if(videoSrc){
+        modalVideo.style.display = "block";
+        modalVideo.src = videoSrc;
+
+        // Autoplay attempt (muted helps mobile autoplay)
+        modalVideo.play().catch(()=>{ /* autoplay may be blocked; user can tap play */ });
+      } else {
+        modalImg.style.display = "block";
+        modalImg.src = imgSrc || "";
+      }
+
+      startHearts(1100);
+    }
+
     document.querySelectorAll('.polaroid').forEach(card=>{
       card.addEventListener('click', ()=>{
-        modalImg.src = card.dataset.src;
-        modalCap.textContent = card.dataset.cap;
-        modal.classList.add('show');
-        startHearts(1100);
+        openModal({
+          cap: card.dataset.cap,
+          imgSrc: card.dataset.src,
+          videoSrc: card.dataset.video
+        });
       });
     });
 
     function hideModal(){
       modal.classList.remove('show');
+
+      // Clear image
       modalImg.src = "";
+
+      // Stop & clear video
+      modalVideo.pause();
+      modalVideo.removeAttribute("src");
+      modalVideo.load();
     }
+
     closeModal.addEventListener('click', hideModal);
     modal.addEventListener('click', (e)=>{ if(e.target === modal) hideModal(); });
     document.addEventListener('keydown', (e)=>{ if(e.key === "Escape") hideModal(); });
