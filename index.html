@@ -419,6 +419,34 @@
       to{ transform: translate(-50%,-50%) scale(2.6); opacity: 0; }
     }
 
+    /* ===== Teleport + heart trail effects (NEW) ===== */
+    .teleport{
+      animation: teleportFX .22s ease-in-out;
+      will-change: transform, filter, opacity;
+    }
+    @keyframes teleportFX{
+      0%   { transform: scale(1);   filter: blur(0);   opacity: 1; }
+      45%  { transform: scale(.65); filter: blur(2px); opacity: .15; }
+      55%  { transform: scale(1.15);filter: blur(0);   opacity: .35; }
+      100% { transform: scale(1);   filter: blur(0);   opacity: 1; }
+    }
+
+    .trailHeart{
+      position: fixed;
+      left: 0; top: 0;
+      transform: translate(-50%,-50%);
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 9999;
+      filter: drop-shadow(0 10px 10px rgba(255,63,134,.20));
+      animation: trailPop 900ms ease-out forwards;
+    }
+    @keyframes trailPop{
+      0%   { opacity: 0; transform: translate(-50%,-50%) scale(.3); }
+      20%  { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.9); }
+    }
+
     /* ===== TEDDY (extra cute) ===== */
     .teddyWrap{
       display:flex;
@@ -451,7 +479,7 @@
       border-radius: 50%;
       background: #c88a62;
       top: 0%;
-      box-shadow: inset -10px -12px 0 rgba(0,0,0,.05));
+      box-shadow: inset -10px -12px 0 rgba(0,0,0,.05); /* ✅ FIXED extra ) */
       transition: transform .25s ease;
     }
     .ear.left{ left: 6%; transform: rotate(-10deg); }
@@ -1218,9 +1246,7 @@
               <button class="maybe" id="maybeBtn">Maybe 🙈</button>
               <button class="no" id="noBtn">No 😤</button>
             </div>
-            <p style="margin:8px 0 0; color:#666; font-weight:750; font-size:13px;">
-              
-            </p>
+            <p style="margin:8px 0 0; color:#666; font-weight:750; font-size:13px;"></p>
           </div>
 
           <div class="panel">
@@ -1335,17 +1361,14 @@
               <div class="cap">Hearts everywhere <small>click ✨</small></div>
             </div>
 
-<div class="polaroid"
-  data-cap="Soft blush vibes 💙"
-  data-src="https://cdn.wallpapersafari.com/11/15/4Dv2eP.jpg"
-  data-video="video03.mp4">
-  <div class="sticker">🙈</div>
-  <img
-    src="https://cdn.wallpapersafari.com/11/15/4Dv2eP.jpg"
-    alt="Doraemon image 3" />
-  <div class="cap">Soft blush vibes <small>click ✨</small></div>
-</div>
-
+            <div class="polaroid"
+              data-cap="Soft blush vibes 💙"
+              data-src="https://cdn.wallpapersafari.com/11/15/4Dv2eP.jpg"
+              data-video="video03.mp4">
+              <div class="sticker">🙈</div>
+              <img src="https://cdn.wallpapersafari.com/11/15/4Dv2eP.jpg" alt="Doraemon image 3" />
+              <div class="cap">Soft blush vibes <small>click ✨</small></div>
+            </div>
 
             <div class="polaroid"
               data-cap="Forever starts here 💍"
@@ -1379,7 +1402,6 @@
         <div class="st s3">✨</div>
         <div class="st s4">💙</div>
         <div class="st s5">🫶</div>
-        <div class="st s5">I LOVE YOU SIRUU</div>
       </div>
 
       <div class="badge"><span class="dot"></span> Happy Propose Day 💍</div>
@@ -1486,7 +1508,7 @@
       floaters.appendChild(wrap);
     }
 
-    // Sparkle trail (fixed)
+    // Sparkle trail
     let lastSparkle = 0;
     document.addEventListener('mousemove', (e) => {
       const now = performance.now();
@@ -1511,54 +1533,75 @@
       toastTimer = setTimeout(()=>toast.classList.remove('show'), 1650);
     }
 
- // Typewriter + support paragraph (FIXED)
-const typeLine = document.getElementById('typeLine');
-const supportPara = document.getElementById('supportPara');
+    // ===== Teleport + heart trail helpers (NEW) =====
+    const trailChars = ["💙","💖","💞","💘","✨","🫶"];
 
-let typingTimer = null;
+    function burstHearts(x, y, count = 10){
+      for(let i=0;i<count;i++){
+        const h = document.createElement("div");
+        h.className = "trailHeart";
+        h.textContent = trailChars[Math.floor(Math.random()*trailChars.length)];
 
-function typeText(text){
-  // Stop any previous typing interval
-  if (typingTimer) {
-    clearInterval(typingTimer);
-    typingTimer = null;
-  }
+        const dx = (-40 + Math.random()*80).toFixed(0) + "px";
+        const dy = (-60 + Math.random()*90).toFixed(0) + "px";
+        h.style.setProperty("--dx", dx);
+        h.style.setProperty("--dy", dy);
 
-  typeLine.textContent = "";
-  let i = 0;
+        h.style.left = x + "px";
+        h.style.top  = y + "px";
+        h.style.fontSize = (14 + Math.random()*10).toFixed(0) + "px";
 
-  typingTimer = setInterval(()=>{
-    typeLine.textContent += text[i] || "";
-    i++;
-
-    // Stop cleanly at the end
-    if (i >= text.length) {
-      clearInterval(typingTimer);
-      typingTimer = null;
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(), 950);
+      }
     }
-  }, 22);
-}
 
-function setLineAndPara(line, para){
-  typeText(line);
-  if (supportPara) supportPara.textContent = para || "";
-}
+    function teleportAnimate(el){
+      el.classList.remove("teleport");
+      void el.offsetWidth; // reflow to restart animation
+      el.classList.add("teleport");
+    }
 
-// Pills (switch line + paragraph + active state)
-const pills = document.querySelectorAll('.pill');
-pills.forEach(p=>{
-  p.addEventListener('click', ()=>{
-    pills.forEach(x=>x.classList.remove('active'));
-    p.classList.add('active');
+    // Typewriter + support paragraph (FIXED)
+    const typeLine = document.getElementById('typeLine');
+    const supportPara = document.getElementById('supportPara');
 
-    setLineAndPara(p.dataset.line, p.dataset.para);
-    showToast("Updated 😄");
-  });
-});
+    let typingTimer = null;
 
-// ✅ Start ONLY ONCE (use the first pill as default)
-pills[0]?.click();
+    function typeText(text){
+      if (typingTimer) {
+        clearInterval(typingTimer);
+        typingTimer = null;
+      }
+      typeLine.textContent = "";
+      let i = 0;
 
+      typingTimer = setInterval(()=>{
+        typeLine.textContent += text[i] || "";
+        i++;
+        if (i >= text.length) {
+          clearInterval(typingTimer);
+          typingTimer = null;
+        }
+      }, 22);
+    }
+
+    function setLineAndPara(line, para){
+      typeText(line);
+      if (supportPara) supportPara.textContent = para || "";
+    }
+
+    // Pills
+    const pills = document.querySelectorAll('.pill');
+    pills.forEach(p=>{
+      p.addEventListener('click', ()=>{
+        pills.forEach(x=>x.classList.remove('active'));
+        p.classList.add('active');
+        setLineAndPara(p.dataset.line, p.dataset.para);
+        showToast("Updated 😄");
+      });
+    });
+    pills[0]?.click();
 
     // Cute rotating teddy heart text
     const heartText = document.getElementById('heartText');
@@ -1697,6 +1740,11 @@ pills[0]?.click();
     const noBtn = document.getElementById('noBtn');
 
     function acceptYes(){
+      // ✅ Teleport pop + heart burst from YES button
+      const yr = yesBtn.getBoundingClientRect();
+      burstHearts(yr.left + yr.width/2, yr.top + yr.height/2, 14);
+      teleportAnimate(yesBtn);
+
       showToast("YES received ✅💙");
       popConfetti();
       startHearts(3600);
@@ -1712,12 +1760,18 @@ pills[0]?.click();
       setTimeout(openYesPop, 450);
     });
 
-    // FUNNY NO: runs away + panics + surrenders
+    // ✅ NO: Teleport away + heart trails + surrender
     let noDodges = 0;
+
     function moveNoButton(){
       const pad = 14;
       const bw = noBtn.offsetWidth;
       const bh = noBtn.offsetHeight;
+
+      // old center
+      const r = noBtn.getBoundingClientRect();
+      const oldX = r.left + r.width/2;
+      const oldY = r.top + r.height/2;
 
       const maxX = window.innerWidth - bw - pad;
       const maxY = window.innerHeight - bh - pad;
@@ -1729,6 +1783,14 @@ pills[0]?.click();
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
       noBtn.style.zIndex = 80;
+
+      // new center
+      const newX = x + bw/2;
+      const newY = y + bh/2;
+
+      burstHearts(oldX, oldY, 10);
+      burstHearts(newX, newY, 12);
+      teleportAnimate(noBtn);
     }
 
     function funnyNo(){
@@ -1753,6 +1815,7 @@ pills[0]?.click();
         setTimeout(acceptYes, 220);
       }
     }
+
     noBtn.addEventListener('mouseenter', funnyNo);
     noBtn.addEventListener('click', (e)=>{ e.preventDefault(); funnyNo(); });
 
@@ -1798,11 +1861,9 @@ pills[0]?.click();
       modalCap.textContent = cap || "💙";
       modal.classList.add('show');
 
-      // Reset both
       modalImg.style.display = "none";
       modalVideo.style.display = "none";
 
-      // Stop previous video if any
       modalVideo.pause();
       modalVideo.removeAttribute("src");
       modalVideo.load();
@@ -1810,9 +1871,7 @@ pills[0]?.click();
       if(videoSrc){
         modalVideo.style.display = "block";
         modalVideo.src = videoSrc;
-
-        // Autoplay attempt (muted helps mobile autoplay)
-        modalVideo.play().catch(()=>{ /* autoplay may be blocked; user can tap play */ });
+        modalVideo.play().catch(()=>{});
       } else {
         modalImg.style.display = "block";
         modalImg.src = imgSrc || "";
@@ -1833,11 +1892,7 @@ pills[0]?.click();
 
     function hideModal(){
       modal.classList.remove('show');
-
-      // Clear image
       modalImg.src = "";
-
-      // Stop & clear video
       modalVideo.pause();
       modalVideo.removeAttribute("src");
       modalVideo.load();
