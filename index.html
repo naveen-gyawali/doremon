@@ -82,6 +82,35 @@
       display:block;
     }
 
+    /* ================================
+       ✅ NEW: LOVE TEXT FLOATERS LAYER
+       ================================ */
+    .loveFloaters{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:1; /* above normal floaters, behind your content */
+      /* prevents overlapping your top header/badge area */
+      clip-path: inset(120px 0 0 0);
+    }
+
+    .loveFloater{
+      position:absolute;
+      font-weight:1000;
+      letter-spacing:.7px;
+      white-space:nowrap;
+      opacity:.22;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+      animation: driftLove linear infinite;
+      user-select:none;
+    }
+
+    @keyframes driftLove{
+      from{ transform: translateY(110vh) rotate(-6deg); }
+      to  { transform: translateY(-20vh) rotate(8deg); }
+    }
+
     /* pages */
     .page{
       position:relative;
@@ -419,7 +448,7 @@
       to{ transform: translate(-50%,-50%) scale(2.6); opacity: 0; }
     }
 
-    /* ===== Teleport + heart trail effects (NEW) ===== */
+    /* ===== Teleport + heart trail effects ===== */
     .teleport{
       animation: teleportFX .22s ease-in-out;
       will-change: transform, filter, opacity;
@@ -447,7 +476,7 @@
       100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.9); }
     }
 
-    /* ===== TEDDY (extra cute) ===== */
+    /* ===== TEDDY ===== */
     .teddyWrap{
       display:flex;
       align-items:center;
@@ -479,7 +508,7 @@
       border-radius: 50%;
       background: #c88a62;
       top: 0%;
-      box-shadow: inset -10px -12px 0 rgba(0,0,0,.05); /* ✅ FIXED extra ) */
+      box-shadow: inset -10px -12px 0 rgba(0,0,0,.05);
       transition: transform .25s ease;
     }
     .ear.left{ left: 6%; transform: rotate(-10deg); }
@@ -536,7 +565,6 @@
       opacity:.9;
     }
 
-    /* blinking lids */
     .lid{
       position:absolute;
       width: 9%;
@@ -558,7 +586,6 @@
       94%, 96%{ opacity:1; transform: scaleY(1); }
     }
 
-    /* blush */
     .blush{
       position:absolute;
       width: 14%;
@@ -676,7 +703,6 @@
       user-select:none;
     }
 
-    /* cute quote block */
     .quote{
       padding: 12px 12px;
       border-radius: 18px;
@@ -707,7 +733,6 @@
     }
     .quote span{ position:relative; z-index:1; }
 
-    /* gallery */
     .gallery{
       display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -770,7 +795,6 @@
       transform: rotate(-6deg);
     }
 
-    /* modal */
     .modal{
       position:fixed;
       inset:0;
@@ -835,7 +859,6 @@
     }
     .xbtn:active{ transform: scale(.98); }
 
-    /* final page */
     .center{ max-width: 860px; margin: 0 auto; }
     .bigCard{
       background: rgba(255,255,255,.86);
@@ -911,7 +934,6 @@
       pointer-events:none;
     }
 
-    /* ===== YES popup + Google Form message box ===== */
     .pop{
       position:fixed;
       inset:0;
@@ -1063,6 +1085,10 @@
 
 <body>
   <div class="floaters" id="floaters" aria-hidden="true"></div>
+
+  <!-- ✅ NEW love floaters (ALL pages) -->
+  <div class="loveFloaters" id="loveFloaters" aria-hidden="true"></div>
+
   <div class="heartRain" id="heartRain" aria-hidden="true"></div>
   <canvas id="confetti"></canvas>
 
@@ -1070,18 +1096,9 @@
   <div class="modal" id="modal">
     <div class="modalBox" role="dialog" aria-modal="true" aria-label="Preview">
       <img id="modalImg" alt="Preview" style="display:none;" />
-
-      <video
-        id="modalVideo"
-        muted
-        controls
-        playsinline
-        preload="metadata"
-        style="display:none; width:100%; max-height:70vh; background:#000;"
-      >
+      <video id="modalVideo" muted controls playsinline preload="metadata" style="display:none; width:100%; max-height:70vh; background:#000;">
         Your browser does not support the video tag.
       </video>
-
       <div class="modalBar">
         <div id="modalCap">💙</div>
         <button class="xbtn" id="closeModal">Close ✨</button>
@@ -1123,19 +1140,11 @@
             target="hidden_iframe"
             onsubmit="formSubmitted()"
           >
-            <textarea
-              class="field"
-              name="entry.559934911"
+            <textarea class="field" name="entry.559934911"
               placeholder="Say anything… one line is enough. (How you feel / what you want / what you need) 💙"
-              required
-            ></textarea>
+              required></textarea>
 
-            <input
-              type="hidden"
-              name="entry.2116131244"
-              value="100 % sure . hehe"
-            />
-
+            <input type="hidden" name="entry.2116131244" value="100 % sure . hehe" />
             <button class="yes" type="submit">Send to me 💌</button>
           </form>
 
@@ -1153,13 +1162,11 @@
   <section class="page active" id="page1">
     <div class="hero">
       <div class="stickers" aria-hidden="true">
-
         <div class="st s1">💙</div>
         <div class="st s2">✨</div>
         <div class="st s3">💖</div>
         <div class="st s4">🫶</div>
         <div class="st s5">💍</div>
-        <div class="st s5">I LOVEU SIRUU </div>
       </div>
 
       <div class="badge"><span class="dot"></span> Happy Propose Day 💍  I LOVE YOU TODAY, TOMORROW AND FOREVER..</div>
@@ -1210,27 +1217,23 @@
             <p id="supportPara" style="margin-top:6px; color: var(--muted); line-height:1.65;"></p>
 
             <div class="pillRow" id="pillRow">
-              <div class="pill"
-                data-line="Siru (Doremon), I don’t want ‘almost’. I want ‘always’. 💙"
-                data-para="I want the kind of love that stays—through distance, through doubts, through time. Not just words, but a real ‘us’ that lasts.">
+              <div class="pill" data-line="Siru (Doremon), I don’t want ‘almost’. I want ‘always’. 💙"
+                   data-para="I want the kind of love that stays—through distance, through doubts, through time. Not just words, but a real ‘us’ that lasts.">
                 Switch line #1
               </div>
 
-              <div class="pill"
-                data-line="I’ll be your calm on heavy days, and your smile on normal ones. 🌙"
-                data-para="Even from far away, I’ll show up emotionally—consistent, respectful, and present. Love should feel safe, not confusing.">
+              <div class="pill" data-line="I’ll be your calm on heavy days, and your smile on normal ones. 🌙"
+                   data-para="Even from far away, I’ll show up emotionally—consistent, respectful, and present. Love should feel safe, not confusing.">
                 Switch line #2
               </div>
 
-              <div class="pill"
-                data-line="Miles exist between us, but so does trust, commitment, and belief in forever. 🤍"
-                data-para="Distance is the situation, not the definition. What defines us is loyalty, patience, and the kind of love that keeps choosing the same person.">
+              <div class="pill" data-line="Miles exist between us, but so does trust, commitment, and belief in forever. 🤍"
+                   data-para="Distance is the situation, not the definition. What defines us is loyalty, patience, and the kind of love that keeps choosing the same person.">
                 Switch line #3
               </div>
 
-              <div class="pill"
-                data-line="You’re my favorite kind of home — the safe kind. 🫶"
-                data-para="You make me feel steady. Not rushed, not anxious—just sure. And that’s why I want a forever that is built, not borrowed.">
+              <div class="pill" data-line="You’re my favorite kind of home — the safe kind. 🫶"
+                   data-para="You make me feel steady. Not rushed, not anxious—just sure. And that’s why I want a forever that is built, not borrowed.">
                 Switch line #4
               </div>
             </div>
@@ -1248,7 +1251,6 @@
               <button class="maybe" id="maybeBtn">Maybe 🙈</button>
               <button class="no" id="noBtn">No 😤</button>
             </div>
-            <p style="margin:8px 0 0; color:#666; font-weight:750; font-size:13px;"></p>
           </div>
 
           <div class="panel">
@@ -1283,12 +1285,10 @@
     <div class="hero">
       <div class="stickers" aria-hidden="true">
         <div class="st s1">💞</div>
-        <div class="st s5">I LOVE YOU SIRUUU</div>
         <div class="st s2">💙</div>
         <div class="st s3">✨</div>
         <div class="st s4">🫶</div>
         <div class="st s5">💍</div>
-        
       </div>
 
       <div class="badge"><span class="dot"></span> Happy Propose Day 💍</div>
@@ -1403,10 +1403,8 @@
       <div class="stickers" aria-hidden="true">
         <div class="st s1">💍</div>
         <div class="st s2">💞</div>
-       
         <div class="st s3">✨</div>
         <div class="st s4">💙</div>
-         <div class="st s5">I LOVE YOU SIRUUU</div>
         <div class="st s5">🫶</div>
       </div>
 
@@ -1498,7 +1496,7 @@
       wrap.className = 'floater floaterImg';
       wrap.style.left = Math.random()*100 + 'vw';
       wrap.style.top  = (-10 + Math.random()*20) + 'vh';
-      const size = 26 + Math.random()*28; // 26px to 54px
+      const size = 26 + Math.random()*28;
       wrap.style.width  = size + 'px';
       wrap.style.height = size + 'px';
       wrap.style.animationDuration = (12 + Math.random()*18) + 's';
@@ -1512,6 +1510,25 @@
       wrap.appendChild(img);
 
       floaters.appendChild(wrap);
+    }
+
+    /* ===========================
+       ✅ NEW LOVE FLOATERS (ALL PAGES)
+       =========================== */
+    const loveFloaters = document.getElementById("loveFloaters");
+    const loveText = "I LOVE YOU SIRUU 💙";
+    const loveColors = ["#ff3f86","#7b61ff","#57c7ff","#ff6aa6","#ffd36a"];
+
+    for(let i=0;i<12;i++){
+      const t = document.createElement("div");
+      t.className = "loveFloater";
+      t.textContent = loveText;
+      t.style.left = Math.random()*100 + "vw";
+      t.style.fontSize = (12 + Math.random()*16).toFixed(0) + "px";
+      t.style.color = loveColors[Math.floor(Math.random()*loveColors.length)];
+      t.style.animationDuration = (14 + Math.random()*18).toFixed(0) + "s";
+      t.style.animationDelay = (-Math.random()*18).toFixed(0) + "s";
+      loveFloaters.appendChild(t);
     }
 
     // Sparkle trail
@@ -1539,7 +1556,7 @@
       toastTimer = setTimeout(()=>toast.classList.remove('show'), 1650);
     }
 
-    // ===== Teleport + heart trail helpers (NEW) =====
+    // ===== Teleport + heart trail helpers =====
     const trailChars = ["💙","💖","💞","💘","✨","🫶","I LOVE YOUU SIRUU"];
 
     function burstHearts(x, y, count = 10){
@@ -1564,11 +1581,11 @@
 
     function teleportAnimate(el){
       el.classList.remove("teleport");
-      void el.offsetWidth; // reflow to restart animation
+      void el.offsetWidth;
       el.classList.add("teleport");
     }
 
-    // Typewriter + support paragraph (FIXED)
+    // Typewriter + support paragraph
     const typeLine = document.getElementById('typeLine');
     const supportPara = document.getElementById('supportPara');
 
@@ -1746,7 +1763,6 @@
     const noBtn = document.getElementById('noBtn');
 
     function acceptYes(){
-      // ✅ Teleport pop + heart burst from YES button
       const yr = yesBtn.getBoundingClientRect();
       burstHearts(yr.left + yr.width/2, yr.top + yr.height/2, 14);
       teleportAnimate(yesBtn);
@@ -1766,7 +1782,7 @@
       setTimeout(openYesPop, 450);
     });
 
-    // ✅ NO: Teleport away + heart trails + surrender
+    // NO: Teleport away + heart trails + surrender
     let noDodges = 0;
 
     function moveNoButton(){
@@ -1774,7 +1790,6 @@
       const bw = noBtn.offsetWidth;
       const bh = noBtn.offsetHeight;
 
-      // old center
       const r = noBtn.getBoundingClientRect();
       const oldX = r.left + r.width/2;
       const oldY = r.top + r.height/2;
@@ -1790,7 +1805,6 @@
       noBtn.style.top  = y + "px";
       noBtn.style.zIndex = 80;
 
-      // new center
       const newX = x + bw/2;
       const newY = y + bh/2;
 
@@ -1856,7 +1870,7 @@
       go(2);
     });
 
-    // ✅ Gallery modal (image OR video)
+    // Gallery modal (image OR video)
     const modal = document.getElementById('modal');
     const modalImg = document.getElementById('modalImg');
     const modalVideo = document.getElementById('modalVideo');
