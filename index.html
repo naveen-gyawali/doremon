@@ -1087,7 +1087,7 @@
         </div>
 
         <div class="pookieBox">
-          <h4>Pookie message box 🥺💌</h4>
+          <h4> message box 🥺💌</h4>
 
           <form
             action="https://docs.google.com/forms/d/e/1FAIpQLSchjUG1V_3R8cyGKdhk352rRbE6Sylkj8V0ftIcMs3HzMKG8Q/formResponse"
@@ -1132,7 +1132,7 @@
         <div class="st s5">💍</div>
       </div>
 
-      <div class="badge"><span class="dot"></span> Happy Propose Day 💍</div>
+      <div class="badge"><span class="dot"></span> Happy Propose Day 💍 /n I LOVE YOU TODAY, TOMORROW AND FOREVER..</div>
       <h1>Hey <span class="nameGlow">Siru</span> (Doremon) 💙</h1>
       <p class="sub">
         I wanted to say something to you,
@@ -1510,43 +1510,54 @@
       toastTimer = setTimeout(()=>toast.classList.remove('show'), 1650);
     }
 
-    // Typewriter + support paragraph
-    const typeLine = document.getElementById('typeLine');
-    const supportPara = document.getElementById('supportPara');
+ // Typewriter + support paragraph (FIXED)
+const typeLine = document.getElementById('typeLine');
+const supportPara = document.getElementById('supportPara');
 
-    function typeText(text){
-      typeLine.textContent = "";
-      let i = 0;
-      const t = setInterval(()=>{
-        typeLine.textContent += text[i] || "";
-        i++;
-        if(i > text.length) clearInterval(t);
-      }, 22);
+let typingTimer = null;
+
+function typeText(text){
+  // Stop any previous typing interval
+  if (typingTimer) {
+    clearInterval(typingTimer);
+    typingTimer = null;
+  }
+
+  typeLine.textContent = "";
+  let i = 0;
+
+  typingTimer = setInterval(()=>{
+    typeLine.textContent += text[i] || "";
+    i++;
+
+    // Stop cleanly at the end
+    if (i >= text.length) {
+      clearInterval(typingTimer);
+      typingTimer = null;
     }
+  }, 22);
+}
 
-    function setLineAndPara(line, para){
-      typeText(line);
-      if (supportPara) supportPara.textContent = para || "";
-    }
+function setLineAndPara(line, para){
+  typeText(line);
+  if (supportPara) supportPara.textContent = para || "";
+}
 
-    const defaultLine = "Siru (Doremon), will you let me be the person who chooses you—gently, daily, and for real? 💙";
-    const defaultPara = "We’re still early in life, and distance is real—but my intentions are clearer than ever. I want a forever that we build with loyalty, trust, and steady love.";
-    setLineAndPara(defaultLine, defaultPara);
+// Pills (switch line + paragraph + active state)
+const pills = document.querySelectorAll('.pill');
+pills.forEach(p=>{
+  p.addEventListener('click', ()=>{
+    pills.forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
 
-    // Pills (switch line + paragraph + active state)
-    const pills = document.querySelectorAll('.pill');
-    pills.forEach(p=>{
-      p.addEventListener('click', ()=>{
-        pills.forEach(x=>x.classList.remove('active'));
-        p.classList.add('active');
+    setLineAndPara(p.dataset.line, p.dataset.para);
+    showToast("Updated 😄");
+  });
+});
 
-        setLineAndPara(p.dataset.line, p.dataset.para);
-        showToast("Updated 😄");
-      });
-    });
+// ✅ Start ONLY ONCE (use the first pill as default)
+pills[0]?.click();
 
-    // Optional: auto-select first pill on load
-    pills[0]?.click();
 
     // Cute rotating teddy heart text
     const heartText = document.getElementById('heartText');
@@ -1569,7 +1580,7 @@
 
     // Hearts rain
     const heartRain = document.getElementById('heartRain');
-    const heartChars = ["💖","💗","💞","💘","💝","💓","🫶","💙","✨"];
+    const heartChars = ["💖","💗","💞","💘","💝","💓","🫶","💙","✨","I LOVE YOU SIRUUU"];
     let heartTimer = null;
     function startHearts(durationMs = 2600){
       stopHearts();
